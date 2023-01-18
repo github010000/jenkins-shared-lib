@@ -14,7 +14,7 @@ def call() {
             stage('Start') {
                 steps {
                     // send build started notifications
-                    sendNotifications 'STARTED'
+                    sendNotifications 'STARTED','ea_jenkins'
                 }
             }
             stage('Install') {
@@ -59,7 +59,7 @@ def call() {
         }
         post {
             always {
-                sendNotifications currentBuild.result 'ea_jenkins'
+                sendNotifications currentBuild.result,'ea_jenkins'
             }
         }
     }

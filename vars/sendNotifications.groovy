@@ -3,7 +3,7 @@
 /**
  * Send notifications based on build status string
  */
-def call(String buildStatus = 'STARTED', String mmChannel = "town-square") {
+def call(String buildStatus = 'STARTED', String mmChannel = 'town-square') {
     // build status of null means successful
     buildStatus = buildStatus ?: 'SUCCESS'
 
@@ -28,7 +28,7 @@ def call(String buildStatus = 'STARTED', String mmChannel = "town-square") {
     }
 
     // Send notifications
-    mattermostSend (color: colorCode, message: summary, channel:  "haesu2")
+    mattermostSend (color: colorCode, message: summary, channel:  mmChannel)
     /**
     slackSend (color: colorCode, message: summary)
 
