@@ -28,7 +28,7 @@ def call(String buildStatus = 'STARTED') {
     }
 
     // Send notifications
-    mattermostSend (color: colorCode, message: summary)
+    mattermostSend (color: colorCode, message: summary, channel:  "haesu2")
     /**
     slackSend (color: colorCode, message: summary)
 
