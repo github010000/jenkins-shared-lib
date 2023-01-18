@@ -59,7 +59,7 @@ def call() {
         }
         post {
             always {
-                sendNotifications currentBuild.result "ea_jenkins"
+                sendNotifications currentBuild.result 'ea_jenkins'
             }
         }
     }
