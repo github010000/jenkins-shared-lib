@@ -44,10 +44,12 @@ def call(Map config = [:]) {
                     }
                 }
             }
-            stage('SonarQube') {
+            stage('SonarQube analysis') {
                 steps {
                     sh "echo  SonarQube analysis"
                 }
+            }
+            stage('SonarQube Quality Gate') {
                 steps {
                     sh "echo  SonarQube Quality Gate"
                 }
