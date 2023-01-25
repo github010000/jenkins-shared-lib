@@ -27,7 +27,10 @@ def call(Map config = [:]) {
             stage('Set Variable') {
                 steps {
                     script {
-                        sh "echo  Set Variable"
+                        sh """
+                           echo  Set Variable
+                           mvn -version
+                        """
                     }
                 }
             }
