@@ -37,7 +37,8 @@ def call(Map config = [:]) {
             stage('Build Jar') {
                 steps {
                     // build
-                    sh "mvn -Dmaven.test.skip=true -e clean package"
+                    def mvnHome = tool 'M3'
+                    sh "${mvnHome}/bin/mvn -Dmaven.test.skip=true -e clean package"
                 }
             }
             stage('Test') {
