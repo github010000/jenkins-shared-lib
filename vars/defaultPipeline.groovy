@@ -2,6 +2,10 @@ def call(Map config = [:]) {
     pipeline {
         agent any
 
+        tools {
+            maven 'M3'
+        }
+
         options {
             disableConcurrentBuilds()
             skipDefaultCheckout(true)
@@ -37,8 +41,7 @@ def call(Map config = [:]) {
             stage('Build Jar') {
                 steps {
                     // build
-                    def mvnHome = tool 'M3'
-                    sh "${mvnHome}/bin/mvn -Dmaven.test.skip=true -e clean package"
+                    sh "mvn -Dmaven.test.skip=true -e clean package"
                 }
             }
             stage('Test') {
