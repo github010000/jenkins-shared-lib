@@ -1,65 +1,72 @@
-def call() {
+def call(Map config = [:]) {
     pipeline {
-        agent {
-            // Use docker container
-            docker {
-                image 'ruby:2.3'
-            }
-        }
+        agent any
+
         options {
-            // Only keep the 10 most recent builds
+            disableConcurrentBuilds()
+            skipDefaultCheckout(true)
             buildDiscarder(logRotator(numToKeepStr: '10'))
         }
+
         stages {
-            stage('Start') {
+            stage('Check build permission') {
                 steps {
                     // send build started notifications
-                    sendNotifications 'STARTED','ea_jenkins'
+                    sendNotifications 'STARTED',"${config.mm_channel}"
+                    script {
+                        sh "env | sort"
+                    }
                 }
             }
-            stage('Install') {
+            stage('Checkout source') {
                 steps {
-                    // install required bundles
-                    sh 'bundle install'
+                    cleanWs()
+                    checkout scm
                 }
             }
-            stage('Build') {
+            stage('Set Variable') {
+                steps {
+                    script {
+                        sh "echo  Set Variable"
+                    }
+                }
+            }
+            stage('Build Jar') {
                 steps {
                     // build
-                    sh 'bundle exec rake build'
-                }
-
-                post {
-                    success {
-                        // Archive the built artifacts
-                        archive includes: 'pkg/*.gem'
-                    }
+                    sh "mvn -Dmaven.test.skip=true -e clean package"
                 }
             }
             stage('Test') {
                 steps {
-                    // run tests with coverage
-                    sh 'bundle exec rake spec'
-                }
-
-                post {
-                    success {
-                        // publish html
-                        publishHTML target: [
-                                allowMissing         : false,
-                                alwaysLinkToLastBuild: false,
-                                keepAll              : true,
-                                reportDir            : 'coverage',
-                                reportFiles          : 'index.html',
-                                reportName           : 'RCov Report'
-                        ]
+                    script {
+                        sh "mvn -P all-tests -Dmaven.test.failure.ignore=true -Dspring.profiles.active=local -B verify jacoco:prepare-agent jacoco:report --quiet"
                     }
+                }
+            }
+            stage('SonarQube') {
+                steps {
+                    sh "echo  SonarQube analysis"
+                }
+                steps {
+                    sh "echo  SonarQube Quality Gate"
+                }
+            }
+            stage('Deployment') {
+                steps {
+                    sh "echo  Deployment"
+                }
+            }
+            stage('Health Check') {
+                steps {
+                    sh "echo  Helath Check"
                 }
             }
         }
         post {
             always {
-                sendNotifications currentBuild.result,'ea_jenkins'
+                cleanWs(cleanWhenNotBuilt: true, deleteDirs: true, disableDeferredWipeout: false, notFailBuild: true)
+                sendNotifications currentBuild.result,"${config.mm_channel}"
             }
         }
     }
