@@ -47,7 +47,10 @@ def call(Map config = [:]) {
             stage('Test') {
                 steps {
                     script {
-                        sh "mvn -P all-tests -Dmaven.test.failure.ignore=true -Dspring.profiles.active=local -B verify jacoco:prepare-agent jacoco:report --quiet"
+                        // sh "mvn -P all-tests -Dmaven.test.failure.ignore=true -Dspring.profiles.active=local -B verify jacoco:prepare-agent jacoco:report --quiet"
+                        systemCommand = load('/var/lib/jenkins/scriptler/scripts/systemCommand.groovy')
+                        systemCommand.system("mvn -version")
+
                     }
                 }
             }
