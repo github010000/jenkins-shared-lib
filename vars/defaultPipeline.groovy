@@ -78,7 +78,7 @@ def call(Map config = [:]) {
         }
         post {
             always {
-                cleanWs(cleanWhenNotBuilt: true, deleteDirs: true, disableDeferredWipeout: false, notFailBuild: true)
+                //cleanWs(cleanWhenNotBuilt: true, deleteDirs: true, disableDeferredWipeout: false, notFailBuild: true)
                 sendNotifications currentBuild.result,"${config.mm_channel}"
             }
         }
