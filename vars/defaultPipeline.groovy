@@ -16,7 +16,7 @@ def call(Map config = [:]) {
             stage('Check build permission') {
                 steps {
                     // send build started notifications
-                    sendNotifications 'STARTED',"${config.mm_channel}"
+                    sendNotifications 'STARTED'
                     script {
                         sh "env | sort"
                     }
@@ -38,7 +38,7 @@ def call(Map config = [:]) {
                     }
                 }
             }
-            stage('Build Jar') {
+            stage('Build') {
                 steps {
                     // build
                     sh "mvn -Dmaven.test.skip=true -e clean package"
@@ -79,7 +79,7 @@ def call(Map config = [:]) {
         post {
             always {
                 //cleanWs(cleanWhenNotBuilt: true, deleteDirs: true, disableDeferredWipeout: false, notFailBuild: true)
-                sendNotifications currentBuild.result,"${config.mm_channel}"
+                sendNotifications currentBuild.result
             }
         }
     }

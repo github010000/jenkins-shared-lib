@@ -3,7 +3,7 @@
 /**
  * Send notifications based on build status string
  */
-def call(String buildStatus = 'STARTED', String mmChannel = 'town-square') {
+def call(String buildStatus = 'STARTED', String mmChannel = 'ea_jenkins') {
     // build status of null means successful
     buildStatus = buildStatus ?: 'SUCCESS'
 
