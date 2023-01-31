@@ -16,7 +16,7 @@ def call(Map config = [:]) {
             stage('Check build permission') {
                 steps {
                     // send build started notifications
-                    sendNotifications 'STARTED'
+                    sendNotifications 'STARTED',"${config.mm_channel}"
                     script {
                         sh "env | sort"
                     }
@@ -79,7 +79,7 @@ def call(Map config = [:]) {
         post {
             always {
                 //cleanWs(cleanWhenNotBuilt: true, deleteDirs: true, disableDeferredWipeout: false, notFailBuild: true)
-                sendNotifications currentBuild.result
+                sendNotifications currentBuild.result,"${config.mm_channel}"
             }
         }
     }
